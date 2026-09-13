@@ -1,0 +1,53 @@
+{
+  "questions": [
+    {
+      "id": "cilj",
+      "type": "single",
+      "title": "Koji ti je glavni cilj?",
+      "options": [
+        "Izgubiti kilograme i dodati mišićnu masu",
+        "Dodati kilograme i oblikovati telo",
+        "Rešavanje zdravstvenih problema (insulinska rezistencija, hormoni…)"
+      ]
+    },
+    {
+      "id": "koliko_dugo",
+      "type": "single",
+      "title": "Koliko dugo pokušavaš da dođeš do tog cilja?",
+      "options": ["Tek počinjem", "Do 1 godine", "1–3 godine", "Duže od 3 godine"]
+    },
+    {
+      "id": "probala",
+      "type": "multi",
+      "title": "Šta si do sada probala?",
+      "hint": "Možeš izabrati više odgovora.",
+      "options": ["Dijete", "Teretanu sama", "Grupne treninge", "Drugog trenera", "Aplikacije", "Ništa od navedenog"]
+    },
+    {
+      "id": "prepreke",
+      "type": "multi",
+      "title": "Šta te je najviše sprečavalo?",
+      "hint": "Možeš izabrati više odgovora.",
+      "options": ["Nedostatak vremena", "Ne znam šta da jedem", "Gubim motivaciju", "Zdravstveni problemi", "Nemam plan"]
+    },
+    {
+      "id": "vaznost",
+      "type": "scale",
+      "title": "Koliko ti je važno da ovo rešiš u narednih 6 nedelja?",
+      "hint": "1 = nije mi prioritet, 10 = želim da krenem odmah",
+      "min": 1,
+      "max": 10
+    },
+    {
+      "id": "spremnost",
+      "type": "single",
+      "title": "Da li si spremna da uložiš u saradnju sa trenerom ako vidiš da je program za tebe?",
+      "options": ["Da, spremna sam", "Želim prvo da čujem detalje", "Trenutno nisam u mogućnosti"]
+    }
+  ],
+  "contact": {
+    "vreme_poziva": ["Pre podne", "Popodne", "Uveče"],
+    "kontakt_kanal": ["Poziv", "WhatsApp", "Viber"]
+  },
+  "nurture_answer": "Trenutno nisam u mogućnosti"
+}

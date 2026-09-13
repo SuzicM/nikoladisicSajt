@@ -1,0 +1,11 @@
+{
+  "name": "nikola-disic-sajt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/js/ && php tests/php/run.php",
+    "test:js": "node --test tests/js/",
+    "test:php": "php tests/php/run.php",
+    "dev": "LEAD_CONFIG=dev/config.php php -S localhost:8000 scripts/dev-router.php"
+  }
+}
