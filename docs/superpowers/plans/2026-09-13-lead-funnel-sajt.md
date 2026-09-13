@@ -1036,6 +1036,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../api/lib/notify.php';
 require_once __DIR__ . '/fixtures.php';
 
+ini_set('error_log', tmp_dir() . '/error.log');
+
 test('naslov prikazuje ime, spremnost i važnost', function () {
     $m = notify_build(lead_fixture(), config_fixture(), 1_800_000_000);
     assert_same('🔥 Nova prijava: Milica (spremnost: Da, spremna sam, važnost 9/10)', $m['subject_plain']);
@@ -2547,13 +2549,14 @@ git commit -m "Čista logika kviza sa testovima"
 
 **Files:**
 - Modify: `index.html` (dodaje overlay skeleton i `<script>` pre `</body>`)
-- Create: `assets/js/quiz.js`, `assets/js/landing.js`
+- Create: `assets/js/dom.js`, `assets/js/quiz.js`, `assets/js/landing.js`
 - Modify: `assets/css/style.css` (dodaje stil kviza na kraj)
 - Modify: `tests/js/html.test.js` (dodaje test skeletona)
 
 **Interfaces:**
 - Consumes: sve iz `quiz-state.js` (Task 8); `POST /api/submit.php` ugovor (Task 5); `[data-open-quiz]`, `[data-sticky-cta]`, `#hero` (Task 7)
 - Produces:
+  - `el(tag: string, attrs?: object, text?: string): HTMLElement` iz `dom.js` — `true` atribut = prazan atribut, `false`/`null` = izostavljen, tekst preko `textContent`
   - `initQuiz(): void` iz `quiz.js`
   - Analytics ugovor bez zavisnosti: `document.dispatchEvent(new CustomEvent('nd:track', { detail: { name, params } }))` sa imenima `StartQuiz` (jednom po sesiji), `QuizStep` (`params: { step: 1..7 }`), `Lead` (posle uspešnog slanja). Sluša ga `consent.js` (Task 10).
   - `sessionStorage` ključevi: `nd_quiz_v1` = `{ state, contact, startedAt, started }`, `nd_utm_v1` = UTM objekat
@@ -2606,6 +2609,20 @@ Expected: FAIL u testu „kviz skeleton, honeypot i skripta“.
 Run: `npm run test:js`
 Expected: svi testovi prolaze.
 
+- [ ] **Step 5a: Napravi `assets/js/dom.js`** (deljeni DOM helper; koriste ga `quiz.js` i `faq.js` iz Task 11)
+
+```js
+export function el(tag, attrs = {}, text) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs)) {
+    if (value === true) node.setAttribute(key, '');
+    else if (value !== false && value != null) node.setAttribute(key, String(value));
+  }
+  if (text != null) node.textContent = text;
+  return node;
+}
+```
+
 - [ ] **Step 5: Implementiraj `assets/js/quiz.js`**
 
 ```js
@@ -2613,6 +2630,7 @@ import {
   readUtm, createState, setAnswer, isAnswered, totalSteps,
   emptyContact, validateContact, buildPayload,
 } from './quiz-state.js';
+import { el } from './dom.js';
 
 const QUIZ_KEY = 'nd_quiz_v1';
 const UTM_KEY = 'nd_utm_v1';
@@ -2632,16 +2650,6 @@ const session = {
 
 function track(name, params = {}) {
   document.dispatchEvent(new CustomEvent('nd:track', { detail: { name, params } }));
-}
-
-function el(tag, attrs = {}, text) {
-  const node = document.createElement(tag);
-  for (const [key, value] of Object.entries(attrs)) {
-    if (value === true) node.setAttribute(key, '');
-    else if (value !== false && value != null) node.setAttribute(key, String(value));
-  }
-  if (text != null) node.textContent = text;
-  return node;
 }
 
 export function initQuiz() {
@@ -3005,7 +3013,7 @@ Expected: svi testovi prolaze.
 - [ ] **Step 10: Commit**
 
 ```bash
-git add index.html assets/js/quiz.js assets/js/landing.js assets/css/style.css tests/js/html.test.js
+git add index.html assets/js/dom.js assets/js/quiz.js assets/js/landing.js assets/css/style.css tests/js/html.test.js
 git commit -m "Kviz overlay sa slanjem prijave i sticky CTA"
 ```
 
@@ -3255,15 +3263,7 @@ export function initConsent() {
   </div>
 ```
 
-- [ ] **Step 5: Izmeni `assets/js/landing.js` — dodaj na vrh**
-
-```js
-import { initConsent } from './consent.js';
-
-initConsent();
-```
-
-(Postojeći `import { initQuiz } …` ostaje ispod; ES module importi se podižu na vrh fajla, pa redosled `import` linija ne utiče na izvršavanje, ali `initConsent()` mora biti pozvan pre `initQuiz()` da bi `nd:track` listener postojao pre prvog događaja.)
+- [ ] **Step 5: Zameni ceo `assets/js/landing.js`** (`initConsent()` mora biti pozvan pre `initQuiz()` da bi `nd:track` listener postojao pre prvog događaja)
 
 Konačan `assets/js/landing.js`:
 ```js
@@ -3332,7 +3332,7 @@ git commit -m "Cookie banner sa pristankom i Meta Pixel događaji"
 - Test: `tests/js/faq.test.js`; Modify: `tests/js/html.test.js`
 
 **Interfaces:**
-- Consumes: `initConsent()` (Task 10); CSS klase iz Task 7; redirect `/hvala?ime=…` (Task 9)
+- Consumes: `initConsent()` (Task 10); `el()` iz `assets/js/dom.js` (Task 9); CSS klase iz Task 7; redirect `/hvala?ime=…` (Task 9)
 - Produces:
   - `greetingText(search: string): string` → `"Hvala, Milica!"` ili `"Hvala!"` (ime trim, 1–60 znakova, ista regex kao server)
   - `initFaq(): void` — radi nad `[data-faq]`; stavke su `.faq-item[data-video][data-poster][data-vtt]`; stavka sa praznim `data-video` se uklanja; ako nijedna ne ostane, `[data-faq-section]` dobija `hidden`
@@ -3382,20 +3382,12 @@ Expected: FAIL — `faq.js` i `hvala.html` ne postoje.
 - [ ] **Step 3: Implementiraj `assets/js/faq.js`**
 
 ```js
+import { el } from './dom.js';
+
 export function greetingText(search) {
   const ime = (new URLSearchParams(search).get('ime') || '').trim();
   const valid = ime.length > 0 && [...ime].length <= 60 && /^\p{L}[\p{L} '\-]*$/u.test(ime);
   return valid ? `Hvala, ${ime}!` : 'Hvala!';
-}
-
-function el(tag, attrs = {}, text) {
-  const node = document.createElement(tag);
-  for (const [key, value] of Object.entries(attrs)) {
-    if (value === true) node.setAttribute(key, '');
-    else if (value !== false && value != null) node.setAttribute(key, String(value));
-  }
-  if (text != null) node.textContent = text;
-  return node;
 }
 
 export function initFaq() {
