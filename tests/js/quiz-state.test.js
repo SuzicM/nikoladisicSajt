@@ -95,6 +95,17 @@ test('validateContact: pravila ista kao na serveru', () => {
   assert.deepEqual(err({ saglasnost: 'true' }), ['saglasnost']);
 });
 
+test('validateContact: email pravila bar strožija od servera', () => {
+  const emailErr = (email) => 'email' in validateContact({ ...validContact(), email });
+  for (const bad of ['milica@gmail..com', '.milica@gmail.com', 'milica.@gmail.com', 'mi..lica@gmail.com',
+    'milica@-gmail.com', 'milica@gmail-.com', 'milića@gmail.com', 'milica@gmail', `${'a'.repeat(65)}@gmail.com`]) {
+    assert.equal(emailErr(bad), true, `treba odbiti: ${bad}`);
+  }
+  for (const good of ['milica@example.com', 'milica.petrovic+fit@gmail.com', 'ana_marija@sub.example.co.rs', 'M.Petrovic@Example.RS']) {
+    assert.equal(emailErr(good), false, `treba prihvatiti: ${good}`);
+  }
+});
+
 test('buildPayload pravi tačan oblik za endpoint', () => {
   let s = createState();
   s = setAnswer(s, q('cilj'), 'Izgubiti kilograme i dodati mišićnu masu');

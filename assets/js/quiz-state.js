@@ -2,6 +2,7 @@ export const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_content', 'utm_campaig
 
 const CALL_TIMES = ['Pre podne', 'Popodne', 'Uveče'];
 const CHANNELS = ['Poziv', 'WhatsApp', 'Viber'];
+const EMAIL_RE = /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
 
 export const CONTACT_ERRORS = {
   ime: 'Upiši svoje ime (samo slova).',
@@ -61,7 +62,8 @@ export function validateContact(contact) {
     errors.ime = CONTACT_ERRORS.ime;
   }
   const email = String(contact.email ?? '').trim();
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+  const [localPart] = email.split('@');
+  if (email.length > 254 || (localPart?.length ?? 0) > 64 || !EMAIL_RE.test(email)) {
     errors.email = CONTACT_ERRORS.email;
   }
   const telefon = String(contact.telefon ?? '').replace(/\s+/g, '');
