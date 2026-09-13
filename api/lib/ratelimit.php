@@ -7,14 +7,17 @@ function rate_limit_exceeded(string $dir, string $ip, int $now, int $max = 5, in
         mkdir($dir, 0700, true);
     }
 
+    $file = $dir . '/' . hash('sha256', $ip) . '.json';
+
     clearstatcache();
     foreach (glob($dir . '/*.json') ?: [] as $stale) {
+        if ($stale === $file) {
+            continue;
+        }
         if (filemtime($stale) < $now - $window) {
             @unlink($stale);
         }
     }
-
-    $file = $dir . '/' . hash('sha256', $ip) . '.json';
     $handle = fopen($file, 'c+');
     if ($handle === false) {
         return false;

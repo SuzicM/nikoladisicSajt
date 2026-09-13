@@ -55,3 +55,16 @@ test('pravi direktorijum ako ne postoji', function () {
     assert_same(false, rate_limit_exceeded($dir, '1.2.3.4', 1_800_000_000));
     assert_true(is_dir($dir));
 });
+
+test('čišćenje ne briše fajl IP adrese koja se trenutno obrađuje', function () {
+    $dir = tmp_dir();
+    $now = 1_800_000_000;
+    rate_limit_exceeded($dir, '1.2.3.4', $now);
+    $file = $dir . '/' . hash('sha256', '1.2.3.4') . '.json';
+    clearstatcache();
+    $inode = fileinode($file);
+    assert_same(false, rate_limit_exceeded($dir, '1.2.3.4', $now + 3601));
+    clearstatcache();
+    assert_same($inode, fileinode($file), 'fajl mora ostati isti (bez unlink-a)');
+    assert_same([$now + 3601], json_decode((string) file_get_contents($file), true));
+});
