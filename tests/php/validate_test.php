@@ -102,4 +102,6 @@ test('lead_source: redosled, preskakanje nevalidnih, direktno', function () {
     assert_same('direktno', lead_source([]));
     assert_same('direktno', lead_source('ig'));
     assert_same('direktno', lead_source(['utm_source' => str_repeat('a', 101)]));
+    assert_same('direktno', lead_source(['utm_source' => "ig\n"]));
+    assert_same('ig', lead_source(['utm_source' => 'ig', 'utm_medium' => "social\n"]));
 });

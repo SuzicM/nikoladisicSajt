@@ -90,7 +90,7 @@ function lead_source(mixed $utm): string
     $parts = [];
     foreach (UTM_KEYS as $key) {
         $value = $utm[$key] ?? null;
-        if (is_string($value) && preg_match('/^[A-Za-z0-9_\-.]{1,100}$/', $value) === 1) {
+        if (is_string($value) && preg_match('/\A[A-Za-z0-9_\-.]{1,100}\z/', $value) === 1) {
             $parts[] = $value;
         }
     }
