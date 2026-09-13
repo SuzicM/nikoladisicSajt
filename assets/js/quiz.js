@@ -76,6 +76,8 @@ export function initQuiz() {
   }
 
   function goTo(step) {
+    const last = totalSteps(quiz) - 1;
+    step = Math.max(0, Math.min(step, last));
     saved.state = { ...saved.state, step };
     persist();
     render();
@@ -111,11 +113,14 @@ export function initQuiz() {
       ? el('button', { type: 'button', class: 'btn btn--primary quiz__next', disabled: !isAnswered(saved.state, question) }, 'Dalje')
       : null;
 
+    let advancing = false;
+
     for (const value of values) {
       const current = saved.state.answers[question.id];
       const pressed = Array.isArray(current) ? current.includes(value) : current === value;
       const option = el('button', { type: 'button', class: 'quiz__opt', 'aria-pressed': String(pressed) }, String(value));
       option.addEventListener('click', () => {
+        if (question.type !== 'multi' && advancing) return;
         saved.state = setAnswer(saved.state, question, value);
         persist();
         if (question.type === 'multi') {
@@ -126,14 +131,20 @@ export function initQuiz() {
         }
         group.querySelectorAll('.quiz__opt').forEach((b) => b.setAttribute('aria-pressed', 'false'));
         option.setAttribute('aria-pressed', 'true');
-        setTimeout(() => goTo(saved.state.step + 1), AUTO_ADVANCE_MS);
+        advancing = true;
+        const from = saved.state.step;
+        setTimeout(() => { if (saved.state.step === from) goTo(from + 1); }, AUTO_ADVANCE_MS);
       });
       group.append(option);
     }
     body.append(group);
 
     if (next) {
-      next.addEventListener('click', () => goTo(saved.state.step + 1));
+      next.addEventListener('click', () => {
+        if (next.disabled) return;
+        next.disabled = true;
+        goTo(saved.state.step + 1);
+      });
       body.append(next);
     }
   }
