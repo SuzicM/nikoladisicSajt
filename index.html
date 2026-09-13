@@ -211,5 +211,23 @@
   <div class="sticky-cta" data-sticky-cta>
     <button type="button" class="btn btn--primary" data-open-quiz>Prijavi se za saradnju</button>
   </div>
+
+  <div class="quiz" id="quiz" role="dialog" aria-modal="true" aria-labelledby="quiz-title" data-instagram="{{KLIJENT: Instagram DM URL, npr. https://ig.me/m/korisnicko_ime}}" hidden>
+    <div class="quiz__panel">
+      <div class="quiz__top">
+        <button type="button" class="quiz__icon" data-quiz-back aria-label="Nazad">←</button>
+        <div class="quiz__progress" role="progressbar" aria-label="Napredak prijave" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1"><span class="quiz__bar" data-quiz-bar></span></div>
+        <button type="button" class="quiz__icon" data-quiz-close aria-label="Zatvori prijavu">✕</button>
+      </div>
+      <p class="quiz__count" data-quiz-count>Korak 1 od 7</p>
+      <div class="quiz__body" data-quiz-body></div>
+      <div class="quiz__hp" aria-hidden="true">
+        <label for="website">Ne popunjavaj ovo polje</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/assets/js/landing.js"></script>
 </body>
 </html>

@@ -44,3 +44,11 @@ test('index.html: obećanje je samo 6 nedelja', () => {
   assert.doesNotMatch(html, /nekoliko meseci/i);
   assert.match(html, /6 nedelja do rezultata/);
 });
+
+test('index.html: kviz skeleton, honeypot i skripta', () => {
+  const html = read('index.html');
+  assert.match(html, /<div class="quiz" id="quiz" role="dialog" aria-modal="true" aria-labelledby="quiz-title"[^>]*hidden>/);
+  assert.match(html, /<input type="text" id="website" name="website" tabindex="-1" autocomplete="off">/);
+  assert.match(html, /data-quiz-body/);
+  assert.match(html, /<script type="module" src="\/assets\/js\/landing\.js"><\/script>\s*<\/body>/);
+});
