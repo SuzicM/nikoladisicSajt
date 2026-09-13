@@ -54,9 +54,10 @@ button { font: inherit; }
 .ph--portrait { aspect-ratio: 4 / 5; }
 .ph--square { aspect-ratio: 1; }
 
-.hero { padding-top: 40px; }
-.hero__grid { display: grid; gap: 32px; align-items: center; }
-.hero__media { order: -1; max-height: 56vh; }
+.hero { padding-top: 24px; }
+.hero__grid { display: grid; gap: 24px; align-items: center; }
+.hero__grid > * { min-width: 0; }
+.hero__media { order: -1; height: min(30vh, 240px); max-height: none; aspect-ratio: auto; }
 
 .results { display: grid; grid-auto-flow: column; grid-auto-columns: 78%; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; margin-top: 24px; }
 .result { margin: 0; scroll-snap-align: start; background: var(--surface); border-radius: var(--radius); overflow: hidden; }
@@ -69,6 +70,7 @@ button { font: inherit; }
 .pains li::before { content: "✕"; position: absolute; left: 0; font-weight: 900; color: var(--danger); }
 
 .fit { display: grid; gap: 16px; margin-top: 24px; }
+.fit > * { min-width: 0; }
 .fit__col { background: var(--surface); border-radius: var(--radius); padding: 24px; }
 .fit__col ul { margin: 0; padding-left: 20px; }
 .fit__col li { margin-bottom: 8px; }
@@ -90,9 +92,10 @@ button { font: inherit; }
 
 .guarantee { text-align: left; }
 .about { display: grid; gap: 32px; align-items: center; }
-.stats { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.about > * { min-width: 0; }
+.stats { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .stats li { display: grid; gap: 2px; }
-.stats strong { font-size: 1.6rem; color: var(--accent); line-height: 1.1; }
+.stats strong { font-size: 1.6rem; color: var(--accent); line-height: 1.1; overflow-wrap: anywhere; }
 .stats span { font-size: .85rem; color: var(--muted); }
 
 .faq-text details { border-bottom: 1px solid #ffffff1f; }
@@ -117,7 +120,7 @@ button { font: inherit; }
 @media (min-width: 900px) {
   .hero { padding-top: 72px; }
   .hero__grid { grid-template-columns: 1.1fr .9fr; gap: 64px; }
-  .hero__media { order: 0; max-height: none; }
+  .hero__media { order: 0; height: auto; aspect-ratio: 4 / 5; max-height: none; }
   .results { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); overflow: visible; }
   .fit, .about { grid-template-columns: 1fr 1fr; }
   .steps, .cards { grid-template-columns: repeat(3, 1fr); }
