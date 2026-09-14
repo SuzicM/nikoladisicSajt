@@ -47,10 +47,11 @@ fi
 MODEL="${WHISPER_MODEL:-$HOME/.whisper/ggml-medium.bin}"
 if command -v whisper-cli >/dev/null 2>&1 && [[ -f "$MODEL" ]]; then
   echo "→ Titlovi: $OUT_DIR/$SLUG.vtt"
-  WAV=$(mktemp -t faq).wav
+  WAV_DIR=$(mktemp -d -t faq)
+  trap 'rm -rf "$WAV_DIR"' EXIT
+  WAV="$WAV_DIR/audio.wav"
   ffmpeg -loglevel error -y -i "$MP4" -ar 16000 -ac 1 -c:a pcm_s16le "$WAV"
   whisper-cli -m "$MODEL" -l sr -f "$WAV" -ovtt -of "$OUT_DIR/$SLUG" >/dev/null
-  rm -f "$WAV"
   node scripts/cyr2lat.js "$OUT_DIR/$SLUG.vtt"
   echo "  Proveri tekst u $OUT_DIR/$SLUG.vtt pre commit-a."
 else

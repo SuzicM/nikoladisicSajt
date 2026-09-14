@@ -13,11 +13,15 @@ const DIGRAPHS = { Љ: 'LJ', Њ: 'NJ', Џ: 'DŽ' };
 
 export function cyr2lat(text) {
   const chars = [...text];
+  const isLetter = (c) => c !== undefined && /\p{L}/u.test(c);
+  const isUpper = (c) => c !== undefined && /\p{Lu}/u.test(c);
+
   return chars.map((ch, i) => {
     if (DIGRAPHS[ch]) {
-      const neighbor = chars[i + 1] ?? chars[i - 1] ?? '';
-      const neighborUpper = /\p{Lu}/u.test(neighbor);
-      return neighborUpper ? DIGRAPHS[ch] : MAP[ch];
+      const next = chars[i + 1];
+      const prev = chars[i - 1];
+      const upper = isLetter(next) ? isUpper(next) : isUpper(prev);
+      return upper ? DIGRAPHS[ch] : MAP[ch];
     }
     return MAP[ch] ?? ch;
   }).join('');

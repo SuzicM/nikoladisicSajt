@@ -12,3 +12,11 @@ test('ne dira latinicu, brojeve i VTT oznake', () => {
   const vtt = 'WEBVTT\n\n00:00:01.000 --> 00:00:03.500\nIshrana bez gladovanja, 6 nedelja.';
   assert.equal(cyr2lat(vtt), vtt);
 });
+
+test('digraf na kraju reči velikim slovima i samostalni digraf', () => {
+  assert.equal(cyr2lat('КОЊ ЈЕ ЛЕП'), 'KONJ JE LEP');
+  assert.equal(cyr2lat('ЏЕП.'), 'DŽEP.');
+  assert.equal(cyr2lat('БОЉ!'), 'BOLJ!');
+  assert.equal(cyr2lat('Коњ је леп'), 'Konj je lep');
+  assert.equal(cyr2lat('Њ'), 'Nj');
+});
