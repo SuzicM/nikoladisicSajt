@@ -29,6 +29,10 @@ function handle_submit(array $req, array $cfg, array $deps): array
     }
 
     if (rate_limit_exceeded($cfg['storage_dir'] . '/ratelimit', $req['ip'], $deps['now'])) {
+        $limited = validate_lead($input, $deps['options']);
+        if ($limited['ok']) {
+            lead_log_append($cfg['storage_dir'] . '/leads.log', $limited['lead'] + ['_razlog' => 'rate_limit'], $deps['now']);
+        }
         return $respond(429, false);
     }
 

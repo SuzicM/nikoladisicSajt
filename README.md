@@ -26,6 +26,7 @@ bash scripts/prelaunch-check.sh
 Push na `main` → Hostinger Git auto-deploy u `public_html`.
 `config.php` i `storage/` se ručno postavljaju jednom, u folder iznad `public_html`.
 Detalji: Task 15 u `docs/superpowers/plans/2026-09-13-lead-funnel-sajt.md`.
+Proveravaj povremeno storage/leads.log: tu završavaju prijave kada MailerLite ne radi ili kada ih zadrži rate limit.
 
 ## Dodavanje FAQ videa
 

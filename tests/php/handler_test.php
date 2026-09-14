@@ -136,6 +136,26 @@ test('svaki zahtev sa ispravnim Origin-om briše stare redove iz loga', function
     assert_true(!is_file($log), 'stari red treba da je obrisan');
 });
 
+test('ispravna prijava preko limita vraća 429 ali se upisuje u log; neispravna ne', function () {
+    [$cfg, $deps, $calls] = handler_env();
+    for ($i = 0; $i < 5; $i++) {
+        handle_submit(handler_req(), $cfg, $deps);
+    }
+    $sentBefore = $calls['mailerlite'];
+    assert_same(429, handle_submit(handler_req(), $cfg, $deps)['status']);
+    assert_same($sentBefore, $calls['mailerlite'], 'preko limita se ništa ne šalje');
+    $rows = array_values(array_filter(explode("\n", (string) file_get_contents($cfg['storage_dir'] . '/leads.log'))));
+    $row = json_decode(end($rows), true);
+    assert_same('rate_limit', $row['lead']['_razlog']);
+    assert_same('milica@example.com', $row['lead']['email']);
+
+    $bad = lead_input_fixture();
+    $bad['contact']['ime'] = '<script>';
+    assert_same(429, handle_submit(handler_req([], $bad), $cfg, $deps)['status']);
+    $rowsAfter = array_values(array_filter(explode("\n", (string) file_get_contents($cfg['storage_dir'] . '/leads.log'))));
+    assert_same(count($rows), count($rowsAfter), 'neispravna prijava se ne upisuje');
+});
+
 test('dry_run_log upisuje kanal i podatke', function () {
     $dir = tmp_dir();
     assert_true(dry_run_log($dir, 'mail', ['subject' => 'Đurđa']));
