@@ -106,3 +106,22 @@ test('garancija: uslovi su identični na landingu i u Uslovima korišćenja', ()
   assert.deepEqual(items(uslovi[1]), items(landing[1]));
   assert.equal(items(landing[1]).length, 3);
 });
+
+test('slike: nema placeholder blokova, svaki <img> ima alt/width/height i fajl postoji', () => {
+  for (const file of ['index.html', 'hvala.html']) {
+    const html = read(file);
+    assert.doesNotMatch(html, /class="[^"]*\bph\b[^"]*"/, `${file}: placeholder .ph još postoji`);
+    const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
+    assert.ok(imgs.length > 0, `${file}: nema slika`);
+    for (const img of imgs) {
+      assert.match(img, /\salt="[^"]+"/, `${file}: alt nedostaje u ${img}`);
+      assert.match(img, /\swidth="\d+"/, `${file}: width nedostaje u ${img}`);
+      assert.match(img, /\sheight="\d+"/, `${file}: height nedostaje u ${img}`);
+      const src = img.match(/\ssrc="\/([^"]+)"/);
+      assert.ok(src && existsSync(new URL(src[1], root)), `${file}: fajl ne postoji za ${img}`);
+    }
+  }
+  const index = read('index.html');
+  assert.match(index, /<img class="hero__media" src="\/assets\/img\/nikola\.webp"[^>]*fetchpriority="high"/);
+  assert.doesNotMatch(index.match(/<img class="hero__media"[^>]*>/)[0], /loading="lazy"/);
+});

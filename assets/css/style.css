@@ -223,3 +223,8 @@ body.quiz-open .cookie { display: none; }
 .legal li { margin-bottom: 8px; }
 .legal p, .legal li { color: #d6d3cd; }
 .legal a { color: var(--accent); }
+
+/* ---------- Fotografije ---------- */
+img.hero__media { width: 100%; object-fit: cover; object-position: center 25%; border-radius: var(--radius); background: var(--surface); }
+.result__img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; background: var(--surface); }
+.about__img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 25%; border-radius: var(--radius); background: var(--surface); }
