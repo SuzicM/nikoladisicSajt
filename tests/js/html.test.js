@@ -52,3 +52,14 @@ test('index.html: kviz skeleton, honeypot i skripta', () => {
   assert.match(html, /data-quiz-body/);
   assert.match(html, /<script type="module" src="\/assets\/js\/landing\.js"><\/script>\s*<\/body>/);
 });
+
+for (const file of PAGES.filter((f) => existsSync(new URL(f, root)))) {
+  test(`${file}: cookie banner i Pixel ID`, () => {
+    const html = read(file);
+    assert.match(html, /<body data-pixel-id="[^"]+">/);
+    assert.match(html, /<div class="cookie" id="cookie-banner"[^>]*hidden>/);
+    assert.match(html, /data-consent="denied">Odbijam</);
+    assert.match(html, /data-consent="granted">Prihvatam</);
+    assert.match(html, /<button type="button" data-cookie-settings>Podešavanja kolačića<\/button>/);
+  });
+}

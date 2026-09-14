@@ -183,3 +183,14 @@ body.quiz-open .sticky-cta { display: none; }
   .quiz__panel { min-height: auto; background: var(--bg); border-radius: 24px; padding: 28px 32px 36px; }
   .quiz__options--scale { grid-template-columns: repeat(10, 1fr); }
 }
+
+/* ---------- Cookie banner ---------- */
+.cookie { position: fixed; z-index: 40; left: 12px; right: 12px; bottom: calc(88px + env(safe-area-inset-bottom)); background: var(--surface); color: var(--text); border: 1px solid #2c2c2c; border-radius: var(--radius); padding: 16px 18px; box-shadow: 0 12px 40px rgba(0, 0, 0, .5); font-size: .92rem; }
+.cookie p { margin: 0 0 12px; }
+.cookie__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cookie .btn { min-height: 46px; font-size: .95rem; padding: 0 12px; }
+body.quiz-open .cookie { display: none; }
+
+@media (min-width: 900px) {
+  .cookie { left: auto; right: 24px; bottom: 24px; width: 420px; }
+}

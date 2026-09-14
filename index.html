@@ -11,7 +11,7 @@
   <link rel="icon" href="/assets/img/favicon.png">
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
+<body data-pixel-id="{{KLIJENT: Meta Pixel ID}}">
   <main>
     <section class="section hero" id="hero">
       <div class="container hero__grid">
@@ -203,6 +203,7 @@
       <ul class="footer__legal">
         <li><a href="/politika-privatnosti">Politika privatnosti</a></li>
         <li><a href="/uslovi-koriscenja">Uslovi korišćenja</a></li>
+        <li><button type="button" data-cookie-settings>Podešavanja kolačića</button></li>
       </ul>
       <p>© 2026 Nikola Dišić. Sva prava zadržana.</p>
     </div>
@@ -210,6 +211,14 @@
 
   <div class="sticky-cta" data-sticky-cta>
     <button type="button" class="btn btn--primary" data-open-quiz>Prijavi se za saradnju</button>
+  </div>
+
+  <div class="cookie" id="cookie-banner" role="region" aria-label="Kolačići" hidden>
+    <p>Koristimo kolačiće (Meta Pixel) da izmerimo koliko su naše objave i reklame korisne. Ništa se ne učitava bez tvog pristanka. Više u <a href="/politika-privatnosti">Politici privatnosti</a>.</p>
+    <div class="cookie__actions">
+      <button type="button" class="btn btn--ghost" data-consent="denied">Odbijam</button>
+      <button type="button" class="btn btn--ghost" data-consent="granted">Prihvatam</button>
+    </div>
   </div>
 
   <div class="quiz" id="quiz" role="dialog" aria-modal="true" aria-labelledby="quiz-title" data-instagram="{{KLIJENT: Instagram DM URL, npr. https://ig.me/m/korisnicko_ime}}" hidden>

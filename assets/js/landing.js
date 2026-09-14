@@ -1,5 +1,7 @@
+import { initConsent } from './consent.js';
 import { initQuiz } from './quiz.js';
 
+initConsent();
 initQuiz();
 
 const sticky = document.querySelector('[data-sticky-cta]');
