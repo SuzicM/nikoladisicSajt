@@ -1,16 +1,17 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { greetingText } from '../../assets/js/faq.js';
+import { greetingFor } from '../../assets/js/faq.js';
 
 test('pozdrav sa imenom', () => {
-  assert.equal(greetingText('?ime=Milica'), 'Hvala, Milica!');
-  assert.equal(greetingText('?ime=%C4%90ur%C4%91a'), 'Hvala, Đurđa!');
-  assert.equal(greetingText('?ime=%20Ana-Marija%20'), 'Hvala, Ana-Marija!');
+  assert.equal(greetingFor('Milica'), 'Hvala, Milica!');
+  assert.equal(greetingFor('Đurđa'), 'Hvala, Đurđa!');
+  assert.equal(greetingFor(' Ana-Marija '), 'Hvala, Ana-Marija!');
 });
 
 test('bez imena ili sa neispravnim imenom je neutralan pozdrav', () => {
-  assert.equal(greetingText(''), 'Hvala!');
-  assert.equal(greetingText('?ime='), 'Hvala!');
-  assert.equal(greetingText('?ime=%3Cscript%3E'), 'Hvala!');
-  assert.equal(greetingText(`?ime=${'a'.repeat(61)}`), 'Hvala!');
+  assert.equal(greetingFor(null), 'Hvala!');
+  assert.equal(greetingFor(''), 'Hvala!');
+  assert.equal(greetingFor('<script>'), 'Hvala!');
+  assert.equal(greetingFor('a'.repeat(61)), 'Hvala!');
+  assert.equal(greetingFor(42), 'Hvala!');
 });

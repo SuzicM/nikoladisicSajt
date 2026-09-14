@@ -1,7 +1,7 @@
 import { el } from './dom.js';
 
-export function greetingText(search) {
-  const ime = (new URLSearchParams(search).get('ime') || '').trim();
+export function greetingFor(name) {
+  const ime = typeof name === 'string' ? name.trim() : '';
   const valid = ime.length > 0 && [...ime].length <= 60 && /^\p{L}[\p{L} '\-]*$/u.test(ime);
   return valid ? `Hvala, ${ime}!` : 'Hvala!';
 }

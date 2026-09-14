@@ -244,8 +244,9 @@ export function initQuiz() {
         track('Lead');
         const ime = saved.contact.ime.trim();
         session.remove(QUIZ_KEY);
+        session.set('nd_ime_v1', ime);
         await new Promise((resolve) => setTimeout(resolve, 300));
-        window.location.assign(`/hvala?ime=${encodeURIComponent(ime)}`);
+        window.location.assign('/hvala');
       } catch {
         submit.disabled = false;
         submit.classList.remove('is-loading');
