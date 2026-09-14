@@ -63,3 +63,14 @@ for (const file of PAGES.filter((f) => existsSync(new URL(f, root)))) {
     assert.match(html, /<button type="button" data-cookie-settings>Podešavanja kolačića<\/button>/);
   });
 }
+
+test('hvala.html: noindex, pozdrav, koraci, vCard, 8 FAQ stavki i skripta', () => {
+  const html = read('hvala.html');
+  assert.match(html, /<meta name="robots" content="noindex">/);
+  assert.match(html, /<h1 data-greeting>Hvala!<\/h1>/);
+  assert.match(html, /href="\/assets\/nikola-disic\.vcf" download/);
+  assert.equal((html.match(/class="faq-item"/g) || []).length, 8);
+  assert.equal((html.match(/data-video="[^"]*"/g) || []).length, 8);
+  assert.match(html, /<section[^>]*data-faq-section/);
+  assert.match(html, /<script type="module" src="\/assets\/js\/hvala-page\.js"><\/script>\s*<\/body>/);
+});

@@ -194,3 +194,22 @@ body.quiz-open .cookie { display: none; }
 @media (min-width: 900px) {
   .cookie { left: auto; right: 24px; bottom: 24px; width: 420px; }
 }
+
+/* ---------- Hvala stranica ---------- */
+.thanks { padding-top: 56px; }
+.thanks__badge { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: var(--accent-text); display: grid; place-items: center; font-size: 2rem; font-weight: 900; margin: 0 0 20px; }
+.next-steps { padding-left: 22px; margin: 0 0 8px; }
+.next-steps li { margin-bottom: 10px; }
+.thanks .btn { margin-top: 20px; }
+
+.faq-video-list { margin-top: 24px; border-top: 1px solid #0000001a; }
+.faq-item { border-bottom: 1px solid #0000001a; }
+.faq-item h3 { margin: 0; font-size: 1.05rem; }
+.faq-q { width: 100%; text-align: left; background: none; border: 0; color: inherit; padding: 20px 44px 20px 0; font-weight: 700; cursor: pointer; position: relative; }
+.faq-q::after { content: "▶"; position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%; background: var(--light-text); color: var(--light-bg); font-size: .7rem; display: grid; place-items: center; }
+.faq-q[aria-expanded="true"]::after { content: "−"; font-size: 1.1rem; }
+.faq-panel { padding-bottom: 24px; }
+.faq-player { position: relative; width: min(360px, 100%); margin-inline: auto; }
+.faq-video { width: 100%; aspect-ratio: 9 / 16; background: #000; border-radius: var(--radius); object-fit: cover; }
+.faq-play { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-text); font-size: 2rem; cursor: pointer; }
+.faq-next { display: flex; margin: 16px auto 0; }

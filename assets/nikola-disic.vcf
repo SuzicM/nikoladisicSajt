@@ -1,0 +1,6 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Dišić;Nikola;;;
+FN:Nikola Dišić – Trener
+TEL;TYPE=CELL:{{KLIJENT: Nikolin broj telefona u formatu +381…}}
+END:VCARD
