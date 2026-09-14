@@ -33,6 +33,14 @@ export function isValidPixelId(id) {
   return typeof id === 'string' && /^[0-9]{10,20}$/.test(id);
 }
 
+export function pixelBootCalls(pixelId) {
+  return [
+    ['set', 'autoConfig', false, pixelId],
+    ['init', pixelId],
+    ['track', 'PageView'],
+  ];
+}
+
 function browserStorage() {
   try {
     return window.localStorage;
@@ -59,8 +67,7 @@ function loadPixel(pixelId) {
   script.src = 'https://connect.facebook.net/en_US/fbevents.js';
   document.head.append(script);
 
-  window.fbq('init', pixelId);
-  window.fbq('track', 'PageView');
+  for (const call of pixelBootCalls(pixelId)) window.fbq(...call);
 }
 
 export function initConsent() {

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  CONSENT_KEY, CONSENT_TTL_MS, readConsent, writeConsent, trackCall, isValidPixelId,
+  CONSENT_KEY, CONSENT_TTL_MS, readConsent, writeConsent, trackCall, isValidPixelId, pixelBootCalls,
 } from '../../assets/js/consent.js';
 
 const memoryStorage = (initial = {}) => {
@@ -62,4 +62,12 @@ test('isValidPixelId', () => {
   assert.equal(isValidPixelId('{{KLIJENT: Meta Pixel ID}}'), false);
   assert.equal(isValidPixelId(''), false);
   assert.equal(isValidPixelId(undefined), false);
+});
+
+test('Pixel se inicijalizuje bez autoConfig pre init i PageView', () => {
+  assert.deepEqual(pixelBootCalls('1234567890123456'), [
+    ['set', 'autoConfig', false, '1234567890123456'],
+    ['init', '1234567890123456'],
+    ['track', 'PageView'],
+  ]);
 });
