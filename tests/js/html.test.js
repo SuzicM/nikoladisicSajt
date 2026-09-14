@@ -125,3 +125,9 @@ test('slike: nema placeholder blokova, svaki <img> ima alt/width/height i fajl p
   assert.match(index, /<img class="hero__media" src="\/assets\/img\/nikola\.webp"[^>]*fetchpriority="high"/);
   assert.doesNotMatch(index.match(/<img class="hero__media"[^>]*>/)[0], /loading="lazy"/);
 });
+
+for (const file of PAGES.filter((f) => existsSync(new URL(f, root)))) {
+  test(`${file}: kratak tekst cookie trake sa linkom na kolačiće`, () => {
+    assert.match(read(file), /<p>Koristimo kolačiće \(Meta Pixel\) samo uz tvoj pristanak\. <a href="\/politika-privatnosti#kolacici">Saznaj više<\/a><\/p>/);
+  });
+}
