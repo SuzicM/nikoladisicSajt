@@ -74,3 +74,8 @@ test('hvala.html: noindex, pozdrav, koraci, vCard, 8 FAQ stavki i skripta', () =
   assert.match(html, /<section[^>]*data-faq-section/);
   assert.match(html, /<script type="module" src="\/assets\/js\/hvala-page\.js"><\/script>\s*<\/body>/);
 });
+
+test('style.css: hidden atribut uvek sakriva element', () => {
+  const css = read('assets/css/style.css');
+  assert.match(css, /\[hidden\]\s*\{\s*display:\s*none\s*!important;\s*\}/);
+});

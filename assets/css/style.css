@@ -28,6 +28,7 @@ button { font: inherit; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+[hidden] { display: none !important; }
 .container { width: min(1120px, 100% - 40px); margin-inline: auto; }
 .container--narrow { width: min(760px, 100% - 40px); }
 .section { padding-block: var(--space); }
