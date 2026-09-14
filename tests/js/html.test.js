@@ -79,3 +79,21 @@ test('style.css: hidden atribut uvek sakriva element', () => {
   const css = read('assets/css/style.css');
   assert.match(css, /\[hidden\]\s*\{\s*display:\s*none\s*!important;\s*\}/);
 });
+
+test('politika-privatnosti.html: obavezni delovi', () => {
+  const html = read('politika-privatnosti.html');
+  for (const needle of ['Rukovalac', 'posebne vrste podataka', 'izričit', 'MailerLite', 'Hostinger', 'Meta',
+    '12 meseci', '30 dana', 'id="kolacici"', 'Poverenik', 'povučeš pristanak']) {
+    assert.ok(html.includes(needle), `nedostaje: ${needle}`);
+  }
+  assert.match(html, /<script type="module" src="\/assets\/js\/legal\.js"><\/script>\s*<\/body>/);
+});
+
+test('uslovi-koriscenja.html: obavezni delovi', () => {
+  const html = read('uslovi-koriscenja.html');
+  for (const needle of ['id="garancija"', 'ne zamenjuje', 'individualni', 'Autorska prava', 'odgovornosti',
+    'Republike Srbije']) {
+    assert.ok(html.includes(needle), `nedostaje: ${needle}`);
+  }
+  assert.match(html, /<script type="module" src="\/assets\/js\/legal\.js"><\/script>\s*<\/body>/);
+});

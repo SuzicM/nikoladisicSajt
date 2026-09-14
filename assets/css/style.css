@@ -214,3 +214,12 @@ body.quiz-open .cookie { display: none; }
 .faq-video { width: 100%; aspect-ratio: 9 / 16; background: #000; border-radius: var(--radius); object-fit: cover; }
 .faq-play { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-text); font-size: 2rem; cursor: pointer; }
 .faq-next { display: flex; margin: 16px auto 0; }
+
+/* ---------- Pravne stranice ---------- */
+.legal { font-size: 1rem; }
+.legal h1 { font-size: clamp(2rem, 6vw, 3rem); }
+.legal h2 { font-size: 1.3rem; margin-top: 2em; scroll-margin-top: 24px; }
+.legal ul { padding-left: 20px; }
+.legal li { margin-bottom: 8px; }
+.legal p, .legal li { color: #d6d3cd; }
+.legal a { color: var(--accent); }
