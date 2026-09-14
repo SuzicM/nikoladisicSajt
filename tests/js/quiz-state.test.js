@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   readUtm, createState, setAnswer, isAnswered, totalSteps,
-  emptyContact, validateContact, buildPayload, CONTACT_ERRORS,
+  emptyContact, validateContact, buildPayload, CONTACT_ERRORS, normalizePhone,
 } from '../../assets/js/quiz-state.js';
 
 const quiz = JSON.parse(readFileSync(new URL('../../assets/data/quiz.json', import.meta.url), 'utf8'));
@@ -104,6 +104,14 @@ test('validateContact: email pravila bar strožija od servera', () => {
   for (const good of ['milica@example.com', 'milica.petrovic+fit@gmail.com', 'ana_marija@sub.example.co.rs', 'M.Petrovic@Example.RS']) {
     assert.equal(emailErr(good), false, `treba prihvatiti: ${good}`);
   }
+});
+
+test('normalizePhone: isto pravilo kao server', () => {
+  assert.equal(normalizePhone('+381 064 123 4567'), '+381641234567');
+  assert.equal(normalizePhone('00381 64 123 4567'), '+381641234567');
+  assert.equal(normalizePhone('064 123 4567'), '0641234567');
+  assert.equal(normalizePhone('+3810641234567'), '+381641234567');
+  assert.deepEqual(validateContact({ ...validContact(), telefon: '+381 064 123 4567' }), {});
 });
 
 test('buildPayload pravi tačan oblik za endpoint', () => {

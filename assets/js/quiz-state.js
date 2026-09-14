@@ -13,6 +13,13 @@ export const CONTACT_ERRORS = {
   saglasnost: 'Potrebna je tvoja saglasnost da bismo obradili prijavu.',
 };
 
+export function normalizePhone(raw) {
+  let phone = String(raw ?? '').replace(/[\s  ]+/g, '');
+  if (phone.startsWith('00')) phone = `+${phone.slice(2)}`;
+  if (phone.startsWith('+3810')) phone = `+381${phone.slice(5)}`;
+  return phone;
+}
+
 export function readUtm(search) {
   const params = new URLSearchParams(search);
   const utm = {};
@@ -66,7 +73,7 @@ export function validateContact(contact) {
   if (email.length > 254 || (localPart?.length ?? 0) > 64 || !EMAIL_RE.test(email)) {
     errors.email = CONTACT_ERRORS.email;
   }
-  const telefon = String(contact.telefon ?? '').replace(/\s+/g, '');
+  const telefon = normalizePhone(contact.telefon);
   if (!/^\+?[0-9]{8,15}$/.test(telefon)) {
     errors.telefon = CONTACT_ERRORS.telefon;
   }

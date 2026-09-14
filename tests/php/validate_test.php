@@ -90,6 +90,19 @@ test('telefon: formati', function () {
     assert_same(false, validate_with(fn(&$i) => $i['contact']['telefon'] = '+3816412345678901')['ok']);
 });
 
+test('normalize_phone: razmaci, NBSP, 00 i +3810', function () {
+    assert_same('+381641234567', normalize_phone('+381 064 123 4567'));
+    assert_same('+381641234567', normalize_phone('00381 64 123 4567'));
+    assert_same('0641234567', normalize_phone("064\u{00A0}123\u{00A0}4567"));
+    assert_same('+381641234567', normalize_phone('+3810641234567'));
+    assert_same('+4915112345678', normalize_phone('+49 151 12345678'));
+});
+
+test('telefon sa +381 0… i NBSP prolazi validaciju i normalizuje se', function () {
+    assert_same('+381641234567', validate_with(fn(&$i) => $i['contact']['telefon'] = '+381 064 123 4567')['lead']['telefon']);
+    assert_same('0641234567', validate_with(fn(&$i) => $i['contact']['telefon'] = "064\u{00A0}123\u{00A0}4567")['lead']['telefon']);
+});
+
 test('vreme poziva i kanal moraju biti sa liste', function () {
     assert_same(false, validate_with(fn(&$i) => $i['contact']['vreme_poziva'] = 'Noću')['ok']);
     assert_same(false, validate_with(fn(&$i) => $i['contact']['kontakt_kanal'] = 'Telegram')['ok']);

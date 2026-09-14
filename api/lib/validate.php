@@ -3,6 +3,18 @@ declare(strict_types=1);
 
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_content', 'utm_campaign'];
 
+function normalize_phone(string $raw): string
+{
+    $phone = preg_replace('/[\s\x{00A0}\x{202F}]+/u', '', $raw) ?? '';
+    if (str_starts_with($phone, '00')) {
+        $phone = '+' . substr($phone, 2);
+    }
+    if (str_starts_with($phone, '+3810')) {
+        $phone = '+381' . substr($phone, 5);
+    }
+    return $phone;
+}
+
 function validate_lead(mixed $input, array $options): array
 {
     $fail = ['ok' => false, 'lead' => null];
@@ -27,7 +39,7 @@ function validate_lead(mixed $input, array $options): array
         return $fail;
     }
 
-    $telefon = is_string($contact['telefon'] ?? null) ? preg_replace('/\s+/', '', $contact['telefon']) : '';
+    $telefon = is_string($contact['telefon'] ?? null) ? normalize_phone($contact['telefon']) : '';
     if (preg_match('/^\+?[0-9]{8,15}$/', $telefon) !== 1) {
         return $fail;
     }
