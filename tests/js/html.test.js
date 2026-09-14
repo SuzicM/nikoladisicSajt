@@ -97,3 +97,12 @@ test('uslovi-koriscenja.html: obavezni delovi', () => {
   }
   assert.match(html, /<script type="module" src="\/assets\/js\/legal\.js"><\/script>\s*<\/body>/);
 });
+
+test('garancija: uslovi su identični na landingu i u Uslovima korišćenja', () => {
+  const items = (html) => [...html.matchAll(/<li>([\s\S]*?)<\/li>/g)].map((m) => m[1].trim());
+  const landing = read('index.html').match(/<section[^>]*id="garancija"[\s\S]*?<ul class="checks">([\s\S]*?)<\/ul>/);
+  const uslovi = read('uslovi-koriscenja.html').match(/<h2 id="garancija">[\s\S]*?<ul>([\s\S]*?)<\/ul>/);
+  assert.ok(landing && uslovi, 'obe liste garancije moraju postojati');
+  assert.deepEqual(items(uslovi[1]), items(landing[1]));
+  assert.equal(items(landing[1]).length, 3);
+});
