@@ -5,6 +5,7 @@ ServerSignature Off
 
 AddType text/vtt .vtt
 AddType text/vcard .vcf
+AddCharset utf-8 .vcf
 AddType application/javascript .js
 AddType image/webp .webp
 

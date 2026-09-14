@@ -24,7 +24,14 @@ test('.htaccess ima obavezne headere, blokade i čiste URL-ove', () => {
     'RewriteRule \\.php$ - [F,L]',
     'RewriteRule ^(hvala|politika-privatnosti|uslovi-koriscenja)/?$ $1.html [L]',
     'AddType text/vtt .vtt',
+    'AddCharset utf-8 .vcf',
   ]) {
     assert.ok(h.includes(needle), `nedostaje: ${needle}`);
   }
+});
+
+test('vCard koristi CRLF završetke redova', () => {
+  const vcf = readFileSync(new URL('../../assets/nikola-disic.vcf', import.meta.url), 'utf8');
+  assert.ok(vcf.includes('\r\n'), 'CRLF nedostaje');
+  assert.ok(!/[^\r]\n/.test(vcf), 'postoji LF bez CR');
 });
