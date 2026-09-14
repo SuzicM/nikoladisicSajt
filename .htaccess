@@ -1,0 +1,60 @@
+Options -Indexes
+DirectoryIndex index.html
+AddDefaultCharset utf-8
+ServerSignature Off
+
+AddType text/vtt .vtt
+AddType text/vcard .vcf
+AddType application/javascript .js
+AddType image/webp .webp
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # HTTPS
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Repo fajlovi i PHP biblioteke nisu javni
+  RewriteRule ^(?:\.git|docs|tests|scripts|dev|storage)(?:/|$) - [F,L]
+  RewriteRule ^(?:package\.json|README\.md|\.gitignore|\.htaccess)$ - [F,L]
+  RewriteRule ^api/submit\.php$ - [L]
+  RewriteRule \.php$ - [F,L]
+  RewriteRule ^api/ - [F,L]
+
+  # *.html → čist URL (samo direktni zahtevi; query string se čuva)
+  RewriteCond %{THE_REQUEST} \s/+(hvala|politika-privatnosti|uslovi-koriscenja)\.html[\s?]
+  RewriteRule ^ /%1 [R=301,L]
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?]
+  RewriteRule ^ / [R=301,L]
+
+  # Čist URL → fajl
+  RewriteRule ^(hvala|politika-privatnosti|uslovi-koriscenja)/?$ $1.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set X-Frame-Options "DENY"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://connect.facebook.net; img-src 'self' data: https://www.facebook.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 hour"
+  ExpiresByType application/javascript "access plus 1 hour"
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
+  ExpiresByType text/vtt "access plus 30 days"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json text/vtt image/svg+xml
+</IfModule>
