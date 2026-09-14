@@ -25,6 +25,8 @@ test('.htaccess ima obavezne headere, blokade i čiste URL-ove', () => {
     'RewriteRule ^(hvala|politika-privatnosti|uslovi-koriscenja)/?$ $1.html [L]',
     'AddType text/vtt .vtt',
     'AddCharset utf-8 .vcf',
+    'Header set Cache-Control "no-cache"',
+    'ExpiresByType application/javascript "access plus 0 seconds"',
   ]) {
     assert.ok(h.includes(needle), `nedostaje: ${needle}`);
   }
