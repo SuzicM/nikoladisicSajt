@@ -127,6 +127,15 @@ test('honeypot zahtevi se ne broje u rate limit', function () {
     assert_same(true, handle_submit(handler_req(), $cfg, $deps)['body']['ok']);
 });
 
+test('svaki zahtev sa ispravnim Origin-om briše stare redove iz loga', function () {
+    [$cfg, $deps] = handler_env();
+    $log = $cfg['storage_dir'] . '/leads.log';
+    lead_log_append($log, ['ime' => 'Stara'], $deps['now'] - 2_592_001);
+    handle_submit(handler_req(['method' => 'POST', 'raw_body' => '{nije json']), $cfg, $deps);
+    clearstatcache();
+    assert_true(!is_file($log), 'stari red treba da je obrisan');
+});
+
 test('dry_run_log upisuje kanal i podatke', function () {
     $dir = tmp_dir();
     assert_true(dry_run_log($dir, 'mail', ['subject' => 'Đurđa']));

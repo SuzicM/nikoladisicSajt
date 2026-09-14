@@ -21,6 +21,8 @@ function handle_submit(array $req, array $cfg, array $deps): array
         return $respond(403, false);
     }
 
+    lead_log_prune($cfg['storage_dir'] . '/leads.log', $deps['now']);
+
     $input = json_decode($req['raw_body'], true);
     if (is_array($input) && looks_like_bot($input)) {
         return $respond(200, true);

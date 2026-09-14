@@ -33,3 +33,33 @@ function lead_log_append(string $file, array $lead, int $now, int $retention = 2
 
     chmod($file, 0600);
 }
+
+function lead_log_prune(string $file, int $now, int $retention = 2592000): void
+{
+    if (!is_file($file)) {
+        return;
+    }
+    $handle = fopen($file, 'c+');
+    if ($handle === false) {
+        return;
+    }
+    flock($handle, LOCK_EX);
+    $kept = [];
+    while (($line = fgets($handle)) !== false) {
+        $row = json_decode($line, true);
+        if (is_array($row) && is_int($row['ts'] ?? null) && $row['ts'] >= $now - $retention) {
+            $kept[] = rtrim($line, "\n");
+        }
+    }
+    ftruncate($handle, 0);
+    rewind($handle);
+    if ($kept !== []) {
+        fwrite($handle, implode("\n", $kept) . "\n");
+    }
+    fflush($handle);
+    flock($handle, LOCK_UN);
+    fclose($handle);
+    if ($kept === []) {
+        @unlink($file);
+    }
+}

@@ -45,3 +45,21 @@ test('dijakritici se čuvaju bez escape-ovanja', function () {
     lead_log_append($file, ['ime' => 'Đurđa'], 1_800_000_000);
     assert_true(str_contains((string) file_get_contents($file), 'Đurđa'));
 });
+
+test('prune bez upisa briše stare redove i prazan fajl', function () {
+    $file = tmp_dir() . '/leads.log';
+    $now = 1_800_000_000;
+    lead_log_append($file, ['ime' => 'Stara'], $now - 2_592_001);
+    lead_log_append($file, ['ime' => 'Nova'], $now - 10);
+    lead_log_prune($file, $now);
+    assert_same(['Nova'], array_map(fn($r) => $r['lead']['ime'], leadlog_rows($file)));
+    lead_log_prune($file, $now + 2_592_000);
+    clearstatcache();
+    assert_true(!is_file($file), 'prazan log treba da je obrisan');
+});
+
+test('prune na nepostojećem fajlu ne radi ništa', function () {
+    $file = tmp_dir() . '/nema.log';
+    lead_log_prune($file, 1_800_000_000);
+    assert_true(!is_file($file));
+});
